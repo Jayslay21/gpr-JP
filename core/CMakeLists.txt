@@ -15,7 +15,7 @@ set(CORE_INC_DIR
  CACHE PATH "CORE INCLUDE SOURCE PATH"
 )
 
-add_library(core STATIC ${CORE_SRC} ${CORE_INC} "JP/Shader.h" "JP/Shader.cpp")
+add_library(core STATIC ${CORE_SRC} ${CORE_INC} "JP/Shader.h" "JP/Shader.cpp" "JP/texture2D.h" "JP/texture2D.cpp" "JP/Shader2D.cpp")
 
 find_package(OpenGL REQUIRED)
 

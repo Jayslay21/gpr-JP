@@ -123,23 +123,23 @@ int main() {
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
 
-        // Clear the screen
+      
         glClearColor(0.3f, 0.4f, 0.9f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // Use the shader program
+       
         glUseProgram(shaderProgram);
         float time = (float)glfwGetTime();
         int timeLoc = glGetUniformLocation(shaderProgram, "uTime");
         glUniform1f(timeLoc, time);
 
-        // Calculate offset for movement
+        
         float offsetX = sin(time) * 0.1f;
         float offsetY = cos(time) * 0.1f;
         int offsetLoc = glGetUniformLocation(shaderProgram, "uOffset");
         glUniform2f(offsetLoc, offsetX, offsetY);
 
-        // Draw the triangle
+        
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
