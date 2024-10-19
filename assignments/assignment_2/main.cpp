@@ -124,7 +124,7 @@ int main() {
         glfwPollEvents();
 
       
-        glClearColor(0.3f, 0.4f, 0.9f, 1.0f);
+        glClearColor(0.678f, 0.847f, 0.902f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
        
