@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <math.h>
-
 #include <ew/external/glad.h>
-#include <ew/ewMath/ewMath.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <iostream>
 
 // Vertex and Fragment Shader source code
 const char* vertexShaderSource = R"(
@@ -12,9 +13,12 @@ const char* vertexShaderSource = R"(
     layout(location = 0) in vec3 aPos;
     layout(location = 1) in vec4 aColor;
     out vec4 ourColor;
+    
     uniform vec2 uOffset; // Uniform for movement offset
+    uniform mat4 transform; // Uniform for matrix transformation
+    
     void main() {
-        gl_Position = vec4(aPos + vec3(uOffset, 0.0), 1.0);
+        gl_Position = transform * vec4(aPos + vec3(uOffset, 0.0), 1.0);
         ourColor = aColor;
     }
 )";
@@ -123,23 +127,29 @@ int main() {
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
 
-      
         glClearColor(0.3f, 0.4f, 0.9f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-       
         glUseProgram(shaderProgram);
         float time = (float)glfwGetTime();
         int timeLoc = glGetUniformLocation(shaderProgram, "uTime");
         glUniform1f(timeLoc, time);
 
-        
+        // Apply offset based on time
         float offsetX = sin(time) * 0.1f;
         float offsetY = cos(time) * 0.1f;
         int offsetLoc = glGetUniformLocation(shaderProgram, "uOffset");
         glUniform2f(offsetLoc, offsetX, offsetY);
 
-        
+        // Apply transformation matrix (rotation + scaling)
+        glm::mat4 trans = glm::mat4(1.0f);
+        trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+        trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+
+        int transformLoc = glGetUniformLocation(shaderProgram, "transform");
+        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
