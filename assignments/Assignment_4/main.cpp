@@ -37,10 +37,16 @@ const char* fragmentShaderSource = R"(
 const int SCREEN_WIDTH = 1080;
 const int SCREEN_HEIGHT = 720;
 
+// Vertex data for a square (two triangles forming a square)
 float vertices[] = {
-    -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-     0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-     0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f
+    // Positions          // Colors
+    -0.5f, -0.5f, 0.0f,   1.0f, 0.0f, 0.0f, 1.0f,  // Bottom-left
+     0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f, 1.0f,  // Bottom-right
+     0.5f,  0.5f, 0.0f,   0.0f, 0.0f, 1.0f, 1.0f,  // Top-right
+
+     0.5f,  0.5f, 0.0f,   0.0f, 0.0f, 1.0f, 1.0f,  // Top-right
+    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f, 1.0f,  // Top-left
+    -0.5f, -0.5f, 0.0f,   1.0f, 0.0f, 0.0f, 1.0f   // Bottom-left
 };
 
 unsigned int compileShader(unsigned int type, const char* source) {
@@ -108,7 +114,7 @@ int main() {
         return 1;
     }
 
-    GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Hello Triangle", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Hello Square", NULL, NULL);
     if (!window) {
         printf("GLFW failed to create window\n");
         glfwTerminate();
@@ -161,9 +167,9 @@ int main() {
         unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");
         glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 
-        // Render the triangle
+        // Render the square (two triangles)
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
 
         // Swap buffers and show the rendered frame
         glfwSwapBuffers(window);
