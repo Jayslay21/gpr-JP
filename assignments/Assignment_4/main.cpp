@@ -211,7 +211,7 @@ int main() {
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
 
-    // Define multiple cube positions, rotation speeds, and scales
+    // Define multiple cube positions, rotation speeds, and scales (20 cubes)
     glm::vec3 cubePositions[] = {
         glm::vec3(0.0f,  0.0f,  0.0f),
         glm::vec3(2.0f,  5.0f, -15.0f),
@@ -222,7 +222,17 @@ int main() {
         glm::vec3(1.3f, -2.0f, -2.5f),
         glm::vec3(1.5f,  2.0f, -2.5f),
         glm::vec3(1.5f,  0.2f, -1.5f),
-        glm::vec3(-1.3f,  1.0f, -1.5f)
+        glm::vec3(-1.3f,  1.0f, -1.5f),
+        glm::vec3(3.0f,  1.5f, -8.0f),
+        glm::vec3(-2.0f,  1.0f, -5.0f),
+        glm::vec3(0.5f,  0.5f, -10.0f),
+        glm::vec3(-2.5f, -3.0f, -9.0f),
+        glm::vec3(3.5f, -0.5f, -6.0f),
+        glm::vec3(1.5f,  4.0f, -11.0f),
+        glm::vec3(-1.0f, -1.0f, -15.0f),
+        glm::vec3(-4.0f,  0.0f, -13.0f),
+        glm::vec3(0.0f,  2.0f, -7.0f),
+        glm::vec3(4.0f, -3.0f, -10.0f)
     };
 
     float rotationSpeeds[] = {
@@ -235,7 +245,17 @@ int main() {
         30.0f,  // Speed for cube 7
         12.0f,  // Speed for cube 8
         27.0f,  // Speed for cube 9
-        14.0f   // Speed for cube 10
+        14.0f,  // Speed for cube 10
+        9.0f,   // Speed for cube 11
+        16.0f,  // Speed for cube 12
+        24.0f,  // Speed for cube 13
+        19.0f,  // Speed for cube 14
+        21.0f,  // Speed for cube 15
+        8.0f,   // Speed for cube 16
+        17.0f,  // Speed for cube 17
+        11.0f,  // Speed for cube 18
+        29.0f,  // Speed for cube 19
+        13.0f   // Speed for cube 20
     };
 
     // Define different sizes for each cube
@@ -249,7 +269,17 @@ int main() {
         0.8f,   // Scale for cube 7
         1.4f,   // Scale for cube 8
         1.3f,   // Scale for cube 9
-        0.9f    // Scale for cube 10
+        0.9f,   // Scale for cube 10
+        1.1f,   // Scale for cube 11
+        0.6f,   // Scale for cube 12
+        1.6f,   // Scale for cube 13
+        1.3f,   // Scale for cube 14
+        0.4f,   // Scale for cube 15
+        1.2f,   // Scale for cube 16
+        0.7f,   // Scale for cube 17
+        0.9f,   // Scale for cube 18
+        1.5f,   // Scale for cube 19
+        1.0f,   // Scale for cube 20
     };
 
     while (!glfwWindowShouldClose(window)) {
@@ -273,7 +303,7 @@ int main() {
 
         glBindVertexArray(VAO);
 
-        for (unsigned int i = 0; i < 10; i++) {
+        for (unsigned int i = 0; i < 20; i++) {
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, cubePositions[i]);
             float angle = rotationSpeeds[i] * (float)glfwGetTime(); // Make cubes rotate at different speeds
