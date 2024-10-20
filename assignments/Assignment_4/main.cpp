@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <math.h>
-
 #include <ew/external/glad.h>
 #include <ew/ewMath/ewMath.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 // Vertex and Fragment Shader source code
 const char* vertexShaderSource = R"(
@@ -12,9 +13,12 @@ const char* vertexShaderSource = R"(
     layout(location = 0) in vec3 aPos;
     layout(location = 1) in vec4 aColor;
     out vec4 ourColor;
+    
+    uniform mat4 transform; // Transformation matrix
     uniform vec2 uOffset; // Uniform for movement offset
+    
     void main() {
-        gl_Position = vec4(aPos + vec3(uOffset, 0.0), 1.0);
+        gl_Position = transform * vec4(aPos + vec3(uOffset, 0.0), 1.0);
         ourColor = aColor;
     }
 )";
@@ -123,26 +127,45 @@ int main() {
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
 
-      
+        // Clear the screen
         glClearColor(0.678f, 0.847f, 0.902f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-       
+        // Use the shader program
         glUseProgram(shaderProgram);
+
+        // Set the time-based color change
         float time = (float)glfwGetTime();
         int timeLoc = glGetUniformLocation(shaderProgram, "uTime");
         glUniform1f(timeLoc, time);
 
-        
+        // Set the offset for movement
         float offsetX = sin(time) * 0.1f;
         float offsetY = cos(time) * 0.1f;
         int offsetLoc = glGetUniformLocation(shaderProgram, "uOffset");
         glUniform2f(offsetLoc, offsetX, offsetY);
 
-        
+        // Create transformation matrix
+        glm::mat4 trans = glm::mat4(1.0f);
+
+        // Apply translation
+        trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+
+        // Apply rotation over time
+        trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+
+        // Apply scaling
+        trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+
+        // Send the transformation matrix to the shader
+        unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");
+        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+
+        // Render the triangle
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
+        // Swap buffers and show the rendered frame
         glfwSwapBuffers(window);
     }
 
