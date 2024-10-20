@@ -12,13 +12,15 @@ const char* vertexShaderSource = R"(
     #version 330 core
     layout(location = 0) in vec3 aPos;
     layout(location = 1) in vec4 aColor;
+
     out vec4 ourColor;
-    
-    uniform mat4 transform; // Transformation matrix
-    uniform vec2 uOffset; // Uniform for movement offset
-    
+
+    uniform mat4 model;
+    uniform mat4 view;
+    uniform mat4 projection;
+
     void main() {
-        gl_Position = transform * vec4(aPos + vec3(uOffset, 0.0), 1.0);
+        gl_Position = projection * view * model * vec4(aPos, 1.0);
         ourColor = aColor;
     }
 )";
@@ -37,16 +39,63 @@ const char* fragmentShaderSource = R"(
 const int SCREEN_WIDTH = 1080;
 const int SCREEN_HEIGHT = 720;
 
-// Vertex data for a square (two triangles forming a square)
+// Vertex data for a 3D cube
 float vertices[] = {
     // Positions          // Colors
-    -0.5f, -0.5f, 0.0f,   1.0f, 0.0f, 0.0f, 1.0f,  // Bottom-left
-     0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f, 1.0f,  // Bottom-right
-     0.5f,  0.5f, 0.0f,   0.0f, 0.0f, 1.0f, 1.0f,  // Top-right
+    -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
 
-     0.5f,  0.5f, 0.0f,   0.0f, 0.0f, 1.0f, 1.0f,  // Top-right
-    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f, 1.0f,  // Top-left
-    -0.5f, -0.5f, 0.0f,   1.0f, 0.0f, 0.0f, 1.0f   // Bottom-left
+    -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+
+    -0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f, 1.0f,
+
+     0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 1.0f,
+
+    -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 1.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 1.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 1.0f
+};
+
+glm::vec3 cubePositions[] = {
+    glm::vec3(0.0f,  0.0f,  0.0f),
+    glm::vec3(2.0f,  5.0f, -15.0f),
+    glm::vec3(-1.5f, -2.2f, -2.5f),
+    glm::vec3(-3.8f, -2.0f, -12.3f),
+    glm::vec3(2.4f, -0.4f, -3.5f),
+    glm::vec3(-1.7f,  3.0f, -7.5f),
+    glm::vec3(1.3f, -2.0f, -2.5f),
+    glm::vec3(1.5f,  2.0f, -2.5f),
+    glm::vec3(1.5f,  0.2f, -1.5f),
+    glm::vec3(-1.3f,  1.0f, -1.5f)
 };
 
 unsigned int compileShader(unsigned int type, const char* source) {
@@ -114,7 +163,7 @@ int main() {
         return 1;
     }
 
-    GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Hello Square", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Hello Cube", NULL, NULL);
     if (!window) {
         printf("GLFW failed to create window\n");
         glfwTerminate();
@@ -127,55 +176,47 @@ int main() {
         return 1;
     }
 
+    glEnable(GL_DEPTH_TEST);
+
     unsigned int shaderProgram = setupShaders();
     unsigned int VAO = setupVertexArrayObject();
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
 
-        // Clear the screen
-        glClearColor(0.678f, 0.847f, 0.902f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Use the shader program
         glUseProgram(shaderProgram);
 
-        // Set the time-based color change
         float time = (float)glfwGetTime();
         int timeLoc = glGetUniformLocation(shaderProgram, "uTime");
         glUniform1f(timeLoc, time);
 
-        // Set the offset for movement
-        float offsetX = sin(time) * 0.1f;
-        float offsetY = cos(time) * 0.1f;
-        int offsetLoc = glGetUniformLocation(shaderProgram, "uOffset");
-        glUniform2f(offsetLoc, offsetX, offsetY);
+        glm::mat4 view = glm::mat4(1.0f);
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+        unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 
-        // Create transformation matrix
-        glm::mat4 trans = glm::mat4(1.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+        unsigned int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
+        glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-        // Apply translation
-        trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-
-        // Apply rotation over time
-        trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-
-        // Apply scaling
-        trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
-
-        // Send the transformation matrix to the shader
-        unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");
-        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
-
-        // Render the square (two triangles)
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        for (unsigned int i = 0; i < 10; i++) {
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, cubePositions[i]);
+            float angle = 20.0f * i + time * glm::radians(50.0f);
+            model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
 
-        // Swap buffers and show the rendered frame
+            unsigned int modelLoc = glGetUniformLocation(shaderProgram, "model");
+            glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
+
         glfwSwapBuffers(window);
     }
 
-    printf("Shutting down...\n");
     glfwTerminate();
     return 0;
 }
