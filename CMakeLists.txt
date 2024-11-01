@@ -20,5 +20,6 @@ add_subdirectory(core)
 add_subdirectory(assignments/assignment1_helloTriangle)
 add_subdirectory(assignments/assignment_2)
 add_subdirectory(assignments/assignment_4)
+add_subdirectory(assignments/assignment_5)
 
 
