@@ -6,7 +6,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
+#include "../../out/build/x64-debug/_deps/glm-src/glm/fwd.hpp"
+#include "../../out/build/x64-debug/_deps/glfw-src/include/GLFW/glfw3.h"
 
 const int SCREEN_WIDTH = 1080;
 const int SCREEN_HEIGHT = 720;

@@ -15,14 +15,10 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/libs)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 LINK_DIRECTORIES(${CMAKE_BINARY_DIR}/libs)
 
-include(external/cpm.cmake)
-
-# add libraries
-include(external/glfw.cmake)
-include(external/imgui.cmake)
-include(external/glm.cmake)
 
 add_subdirectory(core)
 add_subdirectory(assignments/assignment1_helloTriangle)
 add_subdirectory(assignments/assignment_2)
 add_subdirectory(assignments/assignment_4)
+add_subdirectory(assignments/assignment_5)
+
