@@ -3,8 +3,8 @@
 
 #include <ew/external/glad.h>
 #include <ew/ewMath/ewMath.h>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
+//#include <GLFW/glfw3.h>
+//#include <glm/glm.hpp>
 
 // Vertex and Fragment Shader source code
 const char* vertexShaderSource = R"(

@@ -1,13 +1,16 @@
 #include <stdio.h>
 #include <math.h>
 #include <ew/external/glad.h>
-#include "../../out/build/x64-debug/_deps/glfw-src/include/GLFW/glfw3.h"
+//#include "../../out/build/x64-debug/_deps/glfw-src/include/GLFW/glfw3.h"
 #include "../../out/build/x64-debug/_deps/glm-src/glm/geometric.hpp"
 #include "../../out/build/x64-debug/_deps/glm-src/glm/ext/vector_float3.hpp"
 #include "../../out/build/x64-debug/_deps/glm-src/glm/ext/matrix_clip_space.hpp"
 #include "../../out/build/x64-debug/_deps/glm-src/glm/fwd.hpp"
 #include "../../out/build/x64-debug/_deps/glm-src/glm/gtc/type_ptr.hpp"
-#include "../assignment_2/main.cpp"
+
+#include <GLFW/glfw3.h>
+
+//#include "../assignment_2/main.cpp"
 
 // Screen settings
 const int SCREEN_WIDTH = 1080;

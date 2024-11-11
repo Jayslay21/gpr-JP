@@ -7,7 +7,7 @@
 #include "../../out/build/x64-debug/_deps/glm-src/glm/ext/matrix_clip_space.hpp"
 #include "../../out/build/x64-debug/_deps/glm-src/glm/fwd.hpp"
 #include "../../out/build/x64-debug/_deps/glm-src/glm/gtc/type_ptr.hpp"
-#include "../assignment_2/main.cpp"
+//#include "../assignment_2/main.cpp"
 
 // Screen settings
 const int SCREEN_WIDTH = 1080;
@@ -117,6 +117,11 @@ void processInput(GLFWwindow* window) {
         cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+        cameraPos += cameraSpeed * cameraUp;  
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+        cameraPos -= cameraSpeed * cameraUp;   
 }
 
 // Handle mouse input
